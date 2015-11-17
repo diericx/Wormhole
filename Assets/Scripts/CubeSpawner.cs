@@ -6,59 +6,80 @@ public class CubeSpawner : MonoBehaviour {
     public GameObject cubePrefab;
 	public GameObject walk_cubePrefab;
 	private float width = 10.0f;
-	private float initLength = 100.0f;
+	private float initLength = 10.0f;
 	private int amountPerSpawn = 2;
 	private int spawnDistance = 100;
 
 
 	// Use this for initialization
 	void Start () {
-		for (int j = 0; j < initLength; j ++) {
-			for (int i = 0; i < 4; i ++) {
-				for (int k = 0; k < amountPerSpawn; k ++) {
-					var currentPos = new Vector3(0, 0, 0);
-					var targetPos = new Vector3(0, 0, 0);
+        spawnCubes(10f, 10f, 10f);
+        //for (int i = 0; i < 1; i ++)
+        //{
+        //    print("test");
+        //    spawnCubes(10f, 10f, i * 10f);
+        //}
 
-					if (i == 0) {
-						//bottom
-						var randX = Random.Range(-width, width);
-						var randY = 0;
-						var randZ = Random.Range((float)j, (float)j+1);
+    }
 
-						currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-						targetPos = new Vector3(randX, randY, randZ);
-					} else if (i == 1) {
-						//right
-						var randX = width;
-						var randY = Random.Range(0, width*2);
-						var randZ = Random.Range((float)j, (float)j+1);
-						
-						currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-						targetPos = new Vector3(randX, randY, randZ);
-					} else if (i == 2) {
-						//top
-						var randX = Random.Range(-width, width);
-						var randY = width*2;
-						var randZ = Random.Range((float)j, (float)j+1);
-						
-						currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-						targetPos = new Vector3(randX, randY, randZ);
-					} else if (i == 3) {
-						//right
-						var randX = -width;
-						var randY = Random.Range(0, width*2);
-						var randZ = Random.Range((float)j, (float)j+1);
-						
-						currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-						targetPos = new Vector3(randX, randY, randZ);
-					}
+    void spawnCubes(float length, float width, float offset)
+    {
+        for (int j = 0; j < length; j++)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for (int k = 0; k < amountPerSpawn; k++)
+                {
+                    var currentPos = new Vector3(0, 0, 0);
+                    var targetPos = new Vector3(0, 0, 0);
+
+                    if (i == 0)
+                    {
+                        //bottom
+                        var randX = Random.Range(-width, width);
+                        var randY = 0;
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+
+                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                        targetPos = new Vector3(randX, randY, randZ);
+                    }
+                    else if (i == 1)
+                    {
+                        //right
+                        var randX = width;
+                        var randY = Random.Range(0, width * 2);
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+
+                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                        targetPos = new Vector3(randX, randY, randZ);
+                    }
+                    else if (i == 2)
+                    {
+                        //top
+                        var randX = Random.Range(-width, width);
+                        var randY = width * 2;
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+
+                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                        targetPos = new Vector3(randX, randY, randZ);
+                    }
+                    else if (i == 3)
+                    {
+                        //right
+                        var randX = -width;
+                        var randY = Random.Range(0, width * 2);
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+
+                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                        targetPos = new Vector3(randX, randY, randZ);
+                    }
 
 
-					var newCube = new Cube( cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j+1 * k+1);
-				}
-			}
-		}
-	}
+                    var newCube = new Cube(cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j + 1 * k + 1);
+                }
+            }
+        }
+    }
 
 	// Update is called once per frame
 	void Update () {

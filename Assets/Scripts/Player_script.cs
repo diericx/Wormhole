@@ -14,7 +14,7 @@ public class Player_script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GetComponent<Rigidbody>().AddForce(Vector3.down * 10);
+		//GetComponent<Rigidbody>().AddForce(Vector3.down * 10);
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			Vector3 forward = transform.TransformDirection(Vector3.forward);
 			//Vector3 up = transform.TransformDirection(Vector3.up);
