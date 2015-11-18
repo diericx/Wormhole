@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CubeSpawner : MonoBehaviour {
 
@@ -10,10 +11,15 @@ public class CubeSpawner : MonoBehaviour {
 	private int amountPerSpawn = 2;
 	private int spawnDistance = 100;
 
+    public static Dictionary<int, List<Cube>> cubes;
 
-	// Use this for initialization
-	void Start () {
-        spawnCubes(10f, 10f, 10f);
+    private int LOOKAHEAD = 10;
+    private int SECTOR_SIZE = 10;
+
+    // Use this for initialization
+    void Start () {
+        cubes = new Dictionary<int, List<Cube>>();
+        //spawnCubes(10f, 10f, 10f);
         //for (int i = 0; i < 1; i ++)
         //{
         //    print("test");
@@ -21,6 +27,32 @@ public class CubeSpawner : MonoBehaviour {
         //}
 
     }
+
+	// Update is called once per frame
+	void Update () {
+        //print(Player_script.sector);
+        //if ( !cubes.ContainsKey((int)Player_script.sector) )
+        //{
+        //    print("Need to spawn!");
+        //}
+        checkAndSpawnAhead();
+    }
+
+    void checkAndSpawnAhead()
+    {
+        int start = (int)Player_script.sector;
+        for (int i = start; i < start + LOOKAHEAD; i ++)
+        {
+            print(cubes.ContainsKey(i));
+            if (!cubes.ContainsKey(i))
+            {
+                print("NEED TO SPAWN");
+                cubes.Add(i, new List<Cube>());
+                spawnCubes(10, 10, i);
+            }
+        }
+    }
+
 
     void spawnCubes(float length, float width, float offset)
     {
@@ -38,7 +70,7 @@ public class CubeSpawner : MonoBehaviour {
                         //bottom
                         var randX = Random.Range(-width, width);
                         var randY = 0;
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset* SECTOR_SIZE;
 
                         currentPos = new Vector3(randX, randY + spawnDistance, randZ);
                         targetPos = new Vector3(randX, randY, randZ);
@@ -48,7 +80,7 @@ public class CubeSpawner : MonoBehaviour {
                         //right
                         var randX = width;
                         var randY = Random.Range(0, width * 2);
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
 
                         currentPos = new Vector3(randX, randY + spawnDistance, randZ);
                         targetPos = new Vector3(randX, randY, randZ);
@@ -58,7 +90,7 @@ public class CubeSpawner : MonoBehaviour {
                         //top
                         var randX = Random.Range(-width, width);
                         var randY = width * 2;
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
 
                         currentPos = new Vector3(randX, randY + spawnDistance, randZ);
                         targetPos = new Vector3(randX, randY, randZ);
@@ -68,7 +100,7 @@ public class CubeSpawner : MonoBehaviour {
                         //right
                         var randX = -width;
                         var randY = Random.Range(0, width * 2);
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset;
+                        var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
 
                         currentPos = new Vector3(randX, randY + spawnDistance, randZ);
                         targetPos = new Vector3(randX, randY, randZ);
@@ -76,15 +108,11 @@ public class CubeSpawner : MonoBehaviour {
 
 
                     var newCube = new Cube(cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j + 1 * k + 1);
+                    cubes[(int)offset].Add(newCube);
                 }
             }
         }
     }
-
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
 
 public class Cube : MonoBehaviour

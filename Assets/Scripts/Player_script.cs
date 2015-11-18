@@ -5,7 +5,8 @@ public class Player_script : MonoBehaviour {
 	
 	CharacterController cc;
 	public GameObject spawn;
-	
+
+    public static float sector = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -25,7 +26,14 @@ public class Player_script : MonoBehaviour {
 			Debug.Log ("E PRESSED");
 			Physics.gravity = new Vector3(9.81f, 0, 0);
 		}
-	}
+
+        //set sector to a new value if the player has moved forward a sector
+        float currentSector = Mathf.Floor(this.transform.position.z / 10);
+        if (currentSector > 0 && currentSector > sector)
+        {
+            sector = currentSector;
+        }
+    }
 	
 	void OnControllerColliderHit(ControllerColliderHit hit){
 		
