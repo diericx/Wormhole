@@ -108,6 +108,7 @@ public class CubeSpawner : MonoBehaviour {
 
 
                     var newCube = new Cube(cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j + 1 * k + 1);
+                    cubePrefab.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
                     cubes[(int)offset].Add(newCube);
                 }
             }
