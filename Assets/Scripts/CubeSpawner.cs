@@ -4,21 +4,26 @@ using System.Collections.Generic;
 
 public class CubeSpawner : MonoBehaviour {
 
-    public GameObject cubePrefab;
-	public GameObject walk_cubePrefab;
+//    public GameObject cubePrefab;
+//	public GameObject walk_cubePrefab;
+	public GameObject cubePooler_object;
+	
+	private NewObjectPooler_script cubePooler_script;
 	private float width = 10.0f;
 	private float initLength = 10.0f;
 	private int amountPerSpawn = 2;
 	private int spawnDistance = 100;
 
-    public static Dictionary<int, List<Cube>> cubes;
+    public static Dictionary<int, List<GameObject>> cubes;
 
     private int LOOKAHEAD = 10;
     private int SECTOR_SIZE = 10;
 
     // Use this for initialization
     void Start () {
-        cubes = new Dictionary<int, List<Cube>>();
+        cubes = new Dictionary<int, List<GameObject>>();
+        
+        cubePooler_script = cubePooler_object.GetComponent<NewObjectPooler_script>();
         //spawnCubes(10f, 10f, 10f);
         //for (int i = 0; i < 1; i ++)
         //{
@@ -43,11 +48,10 @@ public class CubeSpawner : MonoBehaviour {
         int start = (int)Player_script.sector;
         for (int i = start; i < start + LOOKAHEAD; i ++)
         {
-            print(cubes.ContainsKey(i));
             if (!cubes.ContainsKey(i))
             {
                 print("NEED TO SPAWN");
-                cubes.Add(i, new List<Cube>());
+                cubes.Add(i, new List<GameObject>());
                 spawnCubes(10, 10, i);
             }
         }
@@ -106,10 +110,20 @@ public class CubeSpawner : MonoBehaviour {
                         targetPos = new Vector3(randX, randY, randZ);
                     }
 
-
-                    var newCube = new Cube(cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j + 1 * k + 1);
-                    cubePrefab.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
-                    cubes[(int)offset].Add(newCube);
+					GameObject newCube = cubePooler_script.GetPooledObject();
+					newCube.transform.position = currentPos;
+					//newCube.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
+					
+					Cube_script cubeScript = newCube.GetComponent<Cube_script>();
+					cubeScript.targetPos = targetPos;
+					cubeScript.waitTime = 0.1f * j + 1 * k + 1;
+					
+					newCube.SetActive(true);
+					
+					cubes[(int)offset].Add(newCube);
+//                    var newCube = new Cube(cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j + 1 * k + 1);
+//                    cubePrefab.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
+//                    cubes[(int)offset].Add(newCube);
                 }
             }
         }
