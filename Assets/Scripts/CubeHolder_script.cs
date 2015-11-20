@@ -14,13 +14,13 @@ public class CubeHolder_script : MonoBehaviour {
 
     public static void rotateRight()
     {
-        targetRotation = targetRotation + new Vector3(0, 0, -90);
+        targetRotation = targetRotation + new Vector3(0, 0, -2);
         fixRotation();
     }
 	
     public static void rotateLeft()
     {
-        targetRotation = targetRotation + new Vector3(0, 0, 90);
+        targetRotation = targetRotation + new Vector3(0, 0, 2);
         fixRotation();
     }
 

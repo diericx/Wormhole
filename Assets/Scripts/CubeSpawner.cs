@@ -18,6 +18,8 @@ public class CubeSpawner : MonoBehaviour {
 
     private int LOOKAHEAD = 10;
     private int SECTOR_SIZE = 10;
+    private float CIRCLE_RAD = 10f;
+    private float CUBE_SPAWN_MODIFIER = 0.5f;
 
     // Use this for initialization
     void Start () {
@@ -69,61 +71,79 @@ public class CubeSpawner : MonoBehaviour {
                     var currentPos = new Vector3(0, 0, 0);
                     var targetPos = new Vector3(0, 0, 0);
 
-                    if (i == 0)
-                    {
-                        //bottom
-                        var randX = Random.Range(-width, width);
-                        var randY = 0;
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset* SECTOR_SIZE;
+                    //if (i == 0)
+                    //{
+                    //    //bottom
+                    //    var randX = Random.Range(-width, width);
+                    //    var randY = 0;
+                    //    var randZ = Random.Range((float)j, (float)j + 1) + offset* SECTOR_SIZE;
 
-                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-                        targetPos = new Vector3(randX, randY, randZ);
-                    }
-                    else if (i == 1)
-                    {
-                        //right
-                        var randX = width;
-                        var randY = Random.Range(0, width * 2);
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
+                    //    currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                    //    targetPos = new Vector3(randX, randY, randZ);
+                    //}
+                    //else if (i == 1)
+                    //{
+                    //    //right
+                    //    var randX = width;
+                    //    var randY = Random.Range(0, width * 2);
+                    //    var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
 
-                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-                        targetPos = new Vector3(randX, randY, randZ);
-                    }
-                    else if (i == 2)
-                    {
-                        //top
-                        var randX = Random.Range(-width, width);
-                        var randY = width * 2;
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
+                    //    currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                    //    targetPos = new Vector3(randX, randY, randZ);
+                    //}
+                    //else if (i == 2)
+                    //{
+                    //    //top
+                    //    var randX = Random.Range(-width, width);
+                    //    var randY = width * 2;
+                    //    var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
 
-                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-                        targetPos = new Vector3(randX, randY, randZ);
-                    }
-                    else if (i == 3)
-                    {
-                        //right
-                        var randX = -width;
-                        var randY = Random.Range(0, width * 2);
-                        var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
+                    //    currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                    //    targetPos = new Vector3(randX, randY, randZ);
+                    //}
+                    //else if (i == 3)
+                    //{
+                    //    //right
+                    //    var randX = -width;
+                    //    var randY = Random.Range(0, width * 2);
+                    //    var randZ = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
 
-                        currentPos = new Vector3(randX, randY + spawnDistance, randZ);
-                        targetPos = new Vector3(randX, randY, randZ);
-                    }
+                    //    currentPos = new Vector3(randX, randY + spawnDistance, randZ);
+                    //    targetPos = new Vector3(randX, randY, randZ);
+                    //}
 
-					GameObject newCube = cubePooler_script.GetPooledObject();
+                    //Get Object position based off of random position on circle
+                    var randAngle = Random.Range(1f, 360f);
+                    var angle_rad = randAngle * Mathf.Rad2Deg;
+                    var x = Mathf.Cos(angle_rad) * CIRCLE_RAD;
+                    var y = Mathf.Sin(angle_rad) * CIRCLE_RAD;
+                    var z = Random.Range((float)j, (float)j + 1) + offset * SECTOR_SIZE;
+                    //set postiion
+                    targetPos = new Vector3(x, y, z);
+                    currentPos = targetPos + new Vector3(0, spawnDistance, 0);
+                    //spawn cube
+                    GameObject newCube = cubePooler_script.GetPooledObject();
 					newCube.transform.position = currentPos;
-					//newCube.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
-					
-					Cube_script cubeScript = newCube.transform.GetChild(0).GetComponent<Cube_script>();
+                    //newCube.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
+
+                    //set variables in cube's script
+                    Cube_script cubeScript = newCube.transform.GetChild(0).GetComponent<Cube_script>();
 					cubeScript.setTargetObjPos(targetPos);
-					cubeScript.waitTime = 0.1f * j + 1 * k + 1 + offset;
+
+                    cubeScript.waitTime = 0.1f * j + 1 * k + 1;
+
+                    if (offset <= 9)
+                    {
+                        cubeScript.waitTime += offset;
+                    }
+
+                    cubeScript.waitTime = cubeScript.waitTime * CUBE_SPAWN_MODIFIER;
+
+                    //set cube to active
+                    newCube.SetActive(true);
 					
-					newCube.SetActive(true);
-					
+                    //add cube to list
 					cubes[(int)offset].Add(newCube);
-//                    var newCube = new Cube(cubePrefab, walk_cubePrefab, currentPos, targetPos, 0.1f * j + 1 * k + 1);
-//                    cubePrefab.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
-//                    cubes[(int)offset].Add(newCube);
                 }
             }
         }

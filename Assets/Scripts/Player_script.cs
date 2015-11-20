@@ -9,15 +9,20 @@ public class Player_script : MonoBehaviour {
     private float VELOCITY_LIMIT_Y = 99f;
     private float VELOCITY_LIMIT_Z = 10f;
     Rigidbody rb;
+
 	public GameObject spawn;
+    public GameObject cubePool_object;
+
+    private NewObjectPooler_script cubePooler_script;
 
     public static float sector = 0;
 	
 	// Use this for initialization
 	void Start () {
         rb = this.GetComponent<Rigidbody>();
-		//cc = gameObject.GetComponent<CharacterController>();
-	}
+        cubePooler_script = cubePool_object.GetComponent<NewObjectPooler_script>();
+        //cc = gameObject.GetComponent<CharacterController>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -40,11 +45,11 @@ public class Player_script : MonoBehaviour {
 
 
         //Spinning the cubes
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
             CubeHolder_script.rotateRight();
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
             CubeHolder_script.rotateLeft();
         }
@@ -90,6 +95,7 @@ public class Player_script : MonoBehaviour {
             }
         } else
         {
+            cubePooler_script.disableAll();
             transform.position = spawn.transform.position;
             rb.velocity = new Vector3(0, 0, 0);
             GameController_script.start = false;

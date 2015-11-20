@@ -34,7 +34,16 @@ public class NewObjectPooler_script : MonoBehaviour {
 			pooledObjects.Add(obj);
 		}
 	}
-	
+
+    public void disableAll()
+    {
+        for (int i = 0; i < pooledObjects.Count; i++)
+        {
+            print("disable");
+            pooledObjects[i].SetActive(false);
+        }
+    }
+
 	public GameObject GetPooledObject() {
 	
 		for (int i = 0; i < pooledObjects.Count; i ++) {

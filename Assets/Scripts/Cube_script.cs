@@ -7,6 +7,8 @@ public class Cube_script : MonoBehaviour {
 	public bool shouldStart = false;
 	public bool isWalkable = false;
 
+    private float CUBE_MOVE_SPEED = 5f;
+
     private Transform targetObj;
 
     IEnumerator waitFor(){
@@ -78,13 +80,17 @@ public class Cube_script : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (transform.position != targetObj.position && shouldStart == true) {
-			var newX = (transform.position.x*10 + targetObj.position.x)/11;
-			var newY = (transform.position.y*10 + targetObj.position.y)/11;
-			var newZ = (transform.position.z*10 + targetObj.position.z)/11;
+			var newX = (transform.position.x* CUBE_MOVE_SPEED + targetObj.position.x)/ (CUBE_MOVE_SPEED + 1);
+			var newY = (transform.position.y* CUBE_MOVE_SPEED + targetObj.position.y)/ (CUBE_MOVE_SPEED + 1);
+			var newZ = (transform.position.z* CUBE_MOVE_SPEED + targetObj.position.z)/ (CUBE_MOVE_SPEED + 1);
 
 			var newPos = new Vector3(newX, newY, newZ);
 			transform.position = newPos;
 
 		}
-	}
+
+        //have cube always look at center
+        var centerPosition = new Vector3(0, 0, transform.position.z);
+        transform.LookAt(centerPosition);
+    }
 }
