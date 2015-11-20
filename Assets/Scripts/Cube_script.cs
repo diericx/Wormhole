@@ -3,12 +3,13 @@ using System.Collections;
 
 public class Cube_script : MonoBehaviour {
 
-	public Vector3 targetPos = new Vector3 (0, 0, 0);
 	public float waitTime = 0f;
 	public bool shouldStart = false;
 	public bool isWalkable = false;
 
-	IEnumerator waitFor(){
+    private Transform targetObj;
+
+    IEnumerator waitFor(){
 		//functionality here
 		yield return new WaitForSeconds(waitTime);
 
@@ -24,28 +25,28 @@ public class Cube_script : MonoBehaviour {
 		shouldStart = false;
 		waitTime = 0f;
 		isWalkable = false;
-		targetPos = new Vector3();
 	}
 	
 	void randomizeCubeAppearence() {
 		var scaleDecider = Random.Range (1, 100);
 		float randScale = 1;
-		float posChanger;
 		
 		if (scaleDecider >= 1 && scaleDecider <= 70) {
 			//small
 			randScale = Random.Range (1f, 1.5f);
-		} else if (scaleDecider >= 71 && scaleDecider <= 90) {
+            this.transform.tag = "!walkable";
+        } else if (scaleDecider >= 71 && scaleDecider <= 90) {
 			//medium
 			randScale = Random.Range(2f, 2.5f);
-		} else if (scaleDecider >= 91 && scaleDecider <= 100) {
+            this.transform.tag = "!walkable";
+        } else if (scaleDecider >= 91 && scaleDecider <= 100) {
 			//large walkable
 			isWalkable = true;
-			posChanger = 1;
+            this.transform.tag = "walkable";
 			randScale = Random.Range(3f, 4f);
 		}
 		
-		if (isWalkable) {
+		if (transform.tag == "walkable") {
 			this.GetComponent<Renderer>().material.color = Color.green;
 		} else {
 			this.GetComponent<Renderer>().material.color = Color.grey;
@@ -54,27 +55,36 @@ public class Cube_script : MonoBehaviour {
 		Vector3 scale = new Vector3 (randScale, randScale, randScale + 0.00012f);
 		
 		this.transform.localScale = scale;
-		
-	}
+
+        NewObjectPooler_script.randomScale(this.gameObject);
+
+    }
 
 	// Use this for initialization
 	void Start () {
-
-	}
+        targetObj = transform.parent;
+    }
 
 	public void startDrop() {
 		StartCoroutine(waitFor());
 	}
+
+    public void setTargetObjPos(Vector3 pos)
+    {
+        transform.parent.position = pos;
+        //targetObj.position = pos;
+    } 
 	
 	// Update is called once per frame
 	void Update () {
-		if (transform.position != targetPos && shouldStart == true) {
-			var newX = (transform.position.x*10 + targetPos.x)/11;
-			var newY = (transform.position.y*10 + targetPos.y)/11;
-			var newZ = (transform.position.z*10 + targetPos.z)/11;
+		if (transform.position != targetObj.position && shouldStart == true) {
+			var newX = (transform.position.x*10 + targetObj.position.x)/11;
+			var newY = (transform.position.y*10 + targetObj.position.y)/11;
+			var newZ = (transform.position.z*10 + targetObj.position.z)/11;
 
 			var newPos = new Vector3(newX, newY, newZ);
 			transform.position = newPos;
+
 		}
 	}
 }

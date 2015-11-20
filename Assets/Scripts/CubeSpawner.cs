@@ -114,9 +114,9 @@ public class CubeSpawner : MonoBehaviour {
 					newCube.transform.position = currentPos;
 					//newCube.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
 					
-					Cube_script cubeScript = newCube.GetComponent<Cube_script>();
-					cubeScript.targetPos = targetPos;
-					cubeScript.waitTime = 0.1f * j + 1 * k + 1;
+					Cube_script cubeScript = newCube.transform.GetChild(0).GetComponent<Cube_script>();
+					cubeScript.setTargetObjPos(targetPos);
+					cubeScript.waitTime = 0.1f * j + 1 * k + 1 + offset;
 					
 					newCube.SetActive(true);
 					
@@ -170,7 +170,7 @@ public class Cube : MonoBehaviour
 		Cube_script cubeScript = (Cube_script)cubeObj.GetComponent ("Cube_script");
 		cubeScript.waitTime = waitTime;
 		cubeScript.startDrop ();
-		cubeScript.targetPos = targetPos;
+		cubeScript.setTargetObjPos(targetPos);
 
 		cubeObj.transform.localScale = scale;
     }
