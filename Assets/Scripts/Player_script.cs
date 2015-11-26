@@ -10,17 +10,21 @@ public class Player_script : MonoBehaviour {
     private float VELOCITY_LIMIT_Z = 10f;
     Rigidbody rb;
 
+	//game objects
 	public GameObject spawn;
-    public GameObject cubePool_object;
+    
+    //prefabs
+    public GameObject ring_prefab;
 
-    private NewObjectPooler_script cubePooler_script;
+	//scripts
+    public CubeSpawner cubeSpawner_script;
 
+	//variables
     public static float sector = 0;
 	
 	// Use this for initialization
 	void Start () {
         rb = this.GetComponent<Rigidbody>();
-        cubePooler_script = cubePool_object.GetComponent<NewObjectPooler_script>();
         //cc = gameObject.GetComponent<CharacterController>();
     }
 	
@@ -91,14 +95,17 @@ public class Player_script : MonoBehaviour {
         {
             if (GameController_script.start)
             {
+            	Instantiate(ring_prefab, transform.position, Quaternion.identity);	
                 rb.AddForce(new Vector3(0, 500, 0));
             }
         } else
-        {
-            cubePooler_script.disableAll();
+        {            
             transform.position = spawn.transform.position;
             rb.velocity = new Vector3(0, 0, 0);
             GameController_script.start = false;
+            sector = 0;
+            
+			cubeSpawner_script.resetCubes();
         }
     }
 

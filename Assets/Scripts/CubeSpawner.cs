@@ -18,7 +18,7 @@ public class CubeSpawner : MonoBehaviour {
 
     private int LOOKAHEAD = 10;
     private int SECTOR_SIZE = 10;
-    private float CIRCLE_RAD = 10f;
+    private float CIRCLE_RAD = 15f;
     private float CUBE_SPAWN_MODIFIER = 0.5f;
 
     // Use this for initialization
@@ -52,7 +52,7 @@ public class CubeSpawner : MonoBehaviour {
         {
             if (!cubes.ContainsKey(i))
             {
-                print("NEED TO SPAWN");
+                print("NEED TO SPAWN, " + cubes.Count);
                 cubes.Add(i, new List<GameObject>());
                 spawnCubes(10, 10, i);
             }
@@ -123,12 +123,13 @@ public class CubeSpawner : MonoBehaviour {
                     currentPos = targetPos + new Vector3(0, spawnDistance, 0);
                     //spawn cube
                     GameObject newCube = cubePooler_script.GetPooledObject();
-					newCube.transform.position = currentPos;
+					//newCube.transform.position = currentPos;
                     //newCube.transform.localScale = new Vector3(1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f), 1 + Random.Range(0.01f, 0.2f));
 
                     //set variables in cube's script
                     Cube_script cubeScript = newCube.transform.GetChild(0).GetComponent<Cube_script>();
 					cubeScript.setTargetObjPos(targetPos);
+					newCube.transform.GetChild(0).transform.position = currentPos;
 
                     cubeScript.waitTime = 0.1f * j + 1 * k + 1;
 
@@ -148,50 +149,55 @@ public class CubeSpawner : MonoBehaviour {
             }
         }
     }
-}
-
-public class Cube : MonoBehaviour
-{
-    public GameObject cubeObj;
-    public Vector3 targetPos;
-	private float randScale = 0f;
-	private int posChanger = 0;
-	private bool isWalkable = false;
-
-	public Cube(GameObject cubePrefab, GameObject walk_cubePrefab, Vector3 currentPos, Vector3 targetPos, float waitTime)
-    {
-        this.targetPos = targetPos;
-
-		var scaleDecider = Random.Range (1, 100);
-		if (scaleDecider >= 1 && scaleDecider <= 70) {
-			//small
-			randScale = Random.Range (1f, 1.5f);
-		} else if (scaleDecider >= 71 && scaleDecider <= 80) {
-			//medium
-			randScale = Random.Range(2f, 2.5f);
-		} else if (scaleDecider >= 81 && scaleDecider <= 100) {
-			//large walkable
-			isWalkable = true;
-			posChanger = 1;
-			randScale = Random.Range(3f, 4f);
-		}
-
-		currentPos = new Vector3 (currentPos.x, currentPos.y + posChanger, currentPos.z);
-		targetPos = new Vector3 (targetPos.x, targetPos.y + posChanger, targetPos.z);
-
-		if (isWalkable) {
-			this.cubeObj = (GameObject)Instantiate(walk_cubePrefab, currentPos, Quaternion.identity);
-		} else {
-			this.cubeObj = (GameObject)Instantiate(cubePrefab, currentPos, Quaternion.identity);
-		}
-
-		Vector3 scale = new Vector3 (randScale, randScale, randScale + 0.00012f);
-
-		Cube_script cubeScript = (Cube_script)cubeObj.GetComponent ("Cube_script");
-		cubeScript.waitTime = waitTime;
-		cubeScript.startDrop ();
-		cubeScript.setTargetObjPos(targetPos);
-
-		cubeObj.transform.localScale = scale;
+    
+    public void resetCubes() {
+    	cubePooler_script.disableAll();
+		cubes = new Dictionary<int, List<GameObject>>();
     }
 }
+//
+//public class Cube : MonoBehaviour
+//{
+//    public GameObject cubeObj;
+//    public Vector3 targetPos;
+//	private float randScale = 0f;
+//	private int posChanger = 0;
+//	private bool isWalkable = false;
+//
+//	public Cube(GameObject cubePrefab, GameObject walk_cubePrefab, Vector3 currentPos, Vector3 targetPos, float waitTime)
+//    {
+//        this.targetPos = targetPos;
+//
+//		var scaleDecider = Random.Range (1, 100);
+//		if (scaleDecider >= 1 && scaleDecider <= 70) {
+//			//small
+//			randScale = Random.Range (1f, 1.5f);
+//		} else if (scaleDecider >= 71 && scaleDecider <= 80) {
+//			//medium
+//			randScale = Random.Range(2f, 2.5f);
+//		} else if (scaleDecider >= 81 && scaleDecider <= 100) {
+//			//large walkable
+//			isWalkable = true;
+//			posChanger = 1;
+//			randScale = Random.Range(3f, 4f);
+//		}
+//
+//		currentPos = new Vector3 (currentPos.x, currentPos.y + posChanger, currentPos.z);
+//		targetPos = new Vector3 (targetPos.x, targetPos.y + posChanger, targetPos.z);
+//
+//		if (isWalkable) {
+//			this.cubeObj = (GameObject)Instantiate(walk_cubePrefab, currentPos, Quaternion.identity);
+//		} else {
+//			this.cubeObj = (GameObject)Instantiate(cubePrefab, currentPos, Quaternion.identity);
+//		}
+//
+//		Vector3 scale = new Vector3 (randScale, randScale, randScale + 0.00012f);
+//
+//		Cube_script cubeScript = (Cube_script)cubeObj.GetComponent ("Cube_script");
+//		cubeScript.waitTime = waitTime;
+//		cubeScript.startDrop ();
+//		cubeScript.setTargetObjPos(targetPos);
+//
+//		cubeObj.transform.localScale = scale;
+//    }
+//}

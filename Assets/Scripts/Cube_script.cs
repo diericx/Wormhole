@@ -37,11 +37,11 @@ public class Cube_script : MonoBehaviour {
 			//small
 			randScale = Random.Range (1f, 1.5f);
             this.transform.tag = "!walkable";
-        } else if (scaleDecider >= 71 && scaleDecider <= 90) {
+        } else if (scaleDecider >= 71 && scaleDecider <= 95) {
 			//medium
 			randScale = Random.Range(2f, 2.5f);
             this.transform.tag = "!walkable";
-        } else if (scaleDecider >= 91 && scaleDecider <= 100) {
+        } else if (scaleDecider >= 96 && scaleDecider <= 100) {
 			//large walkable
 			isWalkable = true;
             this.transform.tag = "walkable";

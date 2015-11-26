@@ -38,7 +38,6 @@ public class CubeHolder_script : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        print(targetRotation + ", " + (transform.rotation.eulerAngles == targetRotation) );
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z), 0.07f);
 
         //if (transform.rotation.eulerAngles != targetRotation)

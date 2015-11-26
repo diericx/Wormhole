@@ -39,7 +39,7 @@ public class NewObjectPooler_script : MonoBehaviour {
     {
         for (int i = 0; i < pooledObjects.Count; i++)
         {
-            print("disable");
+            //print("disable");
             pooledObjects[i].SetActive(false);
         }
     }
